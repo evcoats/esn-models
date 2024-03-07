@@ -19,6 +19,7 @@ zip_path = tf.keras.utils.get_file(
     extract=True)
 csv_path, _ = os.path.splitext(zip_path)
 
+
 df = pd.read_csv(csv_path)
 df_hour_lvl = df[5::6].reset_index().drop('index', axis=1)
 
@@ -53,39 +54,50 @@ X_val, y_val = X[60000:65000], y[60000:65000]
 # Test data
 X_test, y_test = X[65000:], y[65000:]
 
+print("X/Y train: ")
+      
+print(X_train[0])
+
+print(y_train[0])
 
 n_features = 1
 
 
-model = Sequential([
-    tf.keras.layers.InputLayer((n_input,n_features)),
-    tfa.layers.ESN(units=100,spectral_radius=0.8),
-    tf.keras.layers.Dense(units=1, activation = 'linear')
-])
+# model = Sequential([
+#     tf.keras.layers.InputLayer((n_input,n_features)),
+#     tfa.layers.ESN(units=100,spectral_radius=0.8),
+#     tf.keras.layers.Dense(units=1, activation = 'linear')
+# ])
 
-model.summary()
+# model.summary()
 
-optimizers = [
-    tf.keras.optimizers.Adam(learning_rate=0.001),
-]
+# optimizers = [
+#     tf.keras.optimizers.Adam(learning_rate=0.001),
+# ]
 
-optimizers_and_layers = [(optimizers[0], model.layers[1])]
+# optimizers_and_layers = [(optimizers[0], model.layers[1])]
 
-optimizer = tfa.optimizers.MultiOptimizer(optimizers_and_layers)
+# optimizer = tfa.optimizers.MultiOptimizer(optimizers_and_layers)
 
-model.compile(loss = 'mean_absolute_error',optimizer=optimizer)
+# model.compile(loss = 'mean_absolute_error',optimizer=optimizer)
 
-model.fit(X_train, y_train, validation_data = (X_val, y_val), epochs = 50)
+# model.fit(X_train, y_train, validation_data = (X_val, y_val), epochs = 50)
 
-losses_df1 = pd.DataFrame(model.history.history)
+# losses_df1 = pd.DataFrame(model.history.history)
 
-losses_df1.plot(figsize = (10,6))
+# losses_df1.plot(figsize = (10,6))
 
-save_model(model, "ESN_Models/BasicForecast.h5")
+# save_model(model, "ESN_Models/BasicForecast.h5")
 
 model = load_model('ESN_Models/BasicForecast.h5')
 
 test_predictions1 = model.predict(X_test).flatten()
+
+print("Test:")
+print(X_test[0])
+
+print("Prediction:")
+print(test_predictions1[0])
 
 X_test_list = []
 for i in range(len(X_test)):
