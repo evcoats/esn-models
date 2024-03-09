@@ -62,32 +62,31 @@ print(y_train[0])
 
 n_features = 1
 
+model = Sequential([
+    tf.keras.layers.InputLayer((n_input,n_features)),
+    tfa.layers.ESN(units=100,spectral_radius=0.8),
+    tf.keras.layers.Dense(units=1, activation = 'linear')
+])
 
-# model = Sequential([
-#     tf.keras.layers.InputLayer((n_input,n_features)),
-#     tfa.layers.ESN(units=100,spectral_radius=0.8),
-#     tf.keras.layers.Dense(units=1, activation = 'linear')
-# ])
+model.summary()
 
-# model.summary()
+optimizers = [
+    tf.keras.optimizers.Adam(learning_rate=0.001),
+]
 
-# optimizers = [
-#     tf.keras.optimizers.Adam(learning_rate=0.001),
-# ]
+optimizers_and_layers = [(optimizers[0], model.layers[1])]
 
-# optimizers_and_layers = [(optimizers[0], model.layers[1])]
+optimizer = tfa.optimizers.MultiOptimizer(optimizers_and_layers)
 
-# optimizer = tfa.optimizers.MultiOptimizer(optimizers_and_layers)
+model.compile(loss = 'mean_absolute_error',optimizer=optimizer)
 
-# model.compile(loss = 'mean_absolute_error',optimizer=optimizer)
+model.fit(X_train, y_train, validation_data = (X_val, y_val), epochs = 50)
 
-# model.fit(X_train, y_train, validation_data = (X_val, y_val), epochs = 50)
+losses_df1 = pd.DataFrame(model.history.history)
 
-# losses_df1 = pd.DataFrame(model.history.history)
+losses_df1.plot(figsize = (10,6))
 
-# losses_df1.plot(figsize = (10,6))
-
-# save_model(model, "ESN_Models/BasicForecast.h5")
+save_model(model, "ESN_Models/BasicForecast.h5")
 
 model = load_model('ESN_Models/BasicForecast.h5')
 
