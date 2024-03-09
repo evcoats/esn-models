@@ -34,6 +34,8 @@ import seaborn as sns
 import tensorflow as tf
 import tensorflow_addons as tfa
 from tensorflow.keras.models import Sequential, save_model, load_model
+from random import randrange
+
 
 dataset = tf.keras.datasets.fashion_mnist
 
@@ -43,10 +45,46 @@ training_images  = training_images / 255.0
 test_images = test_images / 255.0
 
 
+# the first two elements of X are the two images in the sequence, then the next 10 elements are a random combination of 8 other images, with the original set mixed in 
 
-model = tf.keras.models.Sequential([tf.keras.layers.Flatten(),tf.keras.layers.Dense(50, activation=tf.nn.relu),
-                                    tf.keras.layers.Dense(50, activation=tf.nn.relu),
-                                    tf.keras.layers.Dense(50, activation=tf.nn.relu), 
+# X[0:2] == images to remember 
+# X[2:11] == random images with the two images to "recognize" interspersed either once or twice
+# Y[0:4] == zeros for pairs which don't include the image to recognize, ones for pairs where it does
+
+def Sequential_Input(df, number_of_pairs):
+    df_np = df.to_numpy()
+    X = []
+    y = []
+    
+    for i in range(len(df_np) - 2*(number_of_pairs+1)):
+        row = []
+        row1 = [a for a in df_np[i:i + 2]]
+        row.append(row1)
+        rowOfMatch = randrange(5)
+        newY = []
+        for j in range(number_of_pairs):
+            if (rowOfMatch == j):
+                row.append(row1)
+                newY.append(1)
+            else:
+                row.append([a for a in df_np[i+2(1+number_of_pairs):i+2(1+number_of_pairs)+2]])
+                newY.append(0)
+
+        X.append(row)
+        y.append(newY)
+
+    return np.array(X), np.array(y)
+
+number_of_pairs = 5
+
+trainX, trainY = Sequential_Input(training_images, number_of_pairs)
+
+testX, testY = Sequential_Input(test_images, number_of_pairs)
+
+model = tf.keras.models.Sequential([tf.keras.layers.InputLayer((2*(number_of_pairs+1), 28, 28)),
+                                    tf.keras.layers.Flatten(),tf.keras.layers.Dense(100, activation=tf.nn.relu),
+                                    tf.keras.layers.Dense(100, activation=tf.nn.relu),
+                                    tf.keras.layers.Dense(100, activation=tf.nn.relu), 
                                     tf.keras.layers.Dense(5, activation=tf.nn.softmax)])
 
 
@@ -55,6 +93,36 @@ model.compile(optimizer = tf.optimizers.Adam(),
               metrics=['accuracy'])
 
 model.fit(training_images, training_labels, epochs=10)
+
+losses_df1 = pd.DataFrame(model.history.history)
+
+losses_df1.plot(figsize = (10,6))
+
+test_predictions1 = model.predict(testX).flatten()
+
+print("Test:")
+print(testY[0])
+
+print("Prediction")
+print(test_predictions1[0])
+
+X_test_list = []
+for i in range(len(testX)):
+    X_test_list.append(testX[i][0])
+    
+test_predictions_df1 = pd.DataFrame({'X_test':list(X_test_list), 
+                                    'ESN Prediction':list(test_predictions1)})
+
+test_predictions_df1.plot(figsize = (15,6))
+
+plt.show()
+
+test_predictions_df1[(len(testX) - 720):].plot(figsize = (15,5))
+test_predictions_df1.plot(figsize = (15,6))
+
+plt.show()
+
+
 
 
 
