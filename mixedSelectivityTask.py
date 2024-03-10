@@ -6,20 +6,7 @@
         # 1. mixed selectivity visual task model (includes non-linear reservoir): 
             # similar to section 3 of https://ieeexplore.ieee.org/document/7311148
 
-            # - input layer
-            # - 3 reservoir layers: 
-                # layer 1: (λ,αU,ρ,Kin,Krec)=(0.22,0.28,0.65,5,5)
-                # next reservoir layers: (λ,αU,ρ,Kin,Krec)=(0.22, 0.6, 0.4, 5, 5)
-            # - 3 readout layers (after each reservoir layer):
-                # 50 readout nodes each
-            # - one classification layer
-                # 5 nodes each
-
         # 2. linear model: 
-            # - input layer
-            # - 3 fully connected layers, 50 each, 
-                # 50 readout nodes
-            # backpropagation to train
 
 
 # we are using the fashion-mnist dataset for the pictures as it can essentially be any set of images to distinguish 
