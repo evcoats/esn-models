@@ -77,107 +77,108 @@ testX, testY = Sequential_Input(test_images, number_of_pairs)
 print(trainX[0].shape)
 print(trainY[0].shape)
 
+def trainModels():
 
-model1 = tf.keras.models.Sequential([tf.keras.layers.InputLayer((2*(number_of_pairs+1), 28, 28)),
-                                    tf.keras.layers.Flatten(),
-                                    tf.keras.layers.Dense(20, activation=tf.nn.relu),
-                                    tf.keras.layers.Dense(5, activation=tf.nn.softmax)])
-
-
-model1.compile(optimizer = tf.optimizers.Adam(),
-              loss = 'categorical_crossentropy',
-              metrics=['accuracy'])
-
-model1.summary()
-
-model1.fit(trainX, trainY, epochs=10)
-
-losses_df1 = pd.DataFrame(model1.history.history)
-
-losses_df1.plot(figsize = (10,6))
-
-test_predictions1 = model1.predict(testX)
-
-print("Test ANN Model:")
-print(testY[0])
-
-print("Prediction ANN Model")
-print(test_predictions1[0])
-
-print("Test ANN Model:")
-print(testY[1])
-
-print("Prediction ANN Model:")
-print(test_predictions1[1])
-
-trainX = trainX.reshape(trainX.shape[0],2*(number_of_pairs+1), 28*28)
-testX = testX.reshape(testX.shape[0],2*(number_of_pairs+1), 28*28)
-
-model2 = Sequential([tf.keras.layers.InputLayer(input_shape=(2*(number_of_pairs+1), 28*28)),
-                                    tfa.layers.ESN(units=500,spectral_radius=0.8,input_shape=(2*(number_of_pairs+1), 28*28)),
-                                    tf.keras.layers.Dense(20, activation=tf.nn.relu),
-                                    tf.keras.layers.Dense(5, activation=tf.nn.softmax)])
+    model1 = tf.keras.models.Sequential([tf.keras.layers.InputLayer((2*(number_of_pairs+1), 28, 28)),
+                                        tf.keras.layers.Flatten(),
+                                        tf.keras.layers.Dense(20, activation=tf.nn.relu),
+                                        tf.keras.layers.Dense(5, activation=tf.nn.softmax)])
 
 
-model2.compile(optimizer = tf.optimizers.Adam(),
-              loss = 'categorical_crossentropy',
-              metrics=['accuracy'])
+    model1.compile(optimizer = tf.optimizers.Adam(),
+                loss = 'categorical_crossentropy',
+                metrics=['accuracy'])
 
-model2.summary()
+    model1.summary()
 
-model2.fit(trainX, trainY, epochs=10)
+    model1.fit(trainX, trainY, epochs=10)
 
-losses_df1 = pd.DataFrame(model2.history.history)
+    losses_df1 = pd.DataFrame(model1.history.history)
 
-losses_df1.plot(figsize = (10,6))
+    losses_df1.plot(figsize = (10,6))
 
-test_predictions2 = model2.predict(testX)
+    test_predictions1 = model1.predict(testX)
 
-save_model(model1, "ESN_Models/MSlinear.h5")
+    print("Test ANN Model:")
+    print(testY[0])
 
-save_model(model2, "ESN_Models/MSRC.h5")
+    print("Prediction ANN Model")
+    print(test_predictions1[0])
 
-print("Test RC Model:")
-print(testY[0])
+    print("Test ANN Model:")
+    print(testY[1])
 
-print("Prediction RC Model")
-print(test_predictions2[0])
+    print("Prediction ANN Model:")
+    print(test_predictions1[1])
 
-print("Test RC Model:")
-print(testY[1])
+    trainX = trainX.reshape(trainX.shape[0],2*(number_of_pairs+1), 28*28)
+    testX = testX.reshape(testX.shape[0],2*(number_of_pairs+1), 28*28)
 
-print("Prediction RC Model:")
-print(test_predictions2[1])
+    model2 = Sequential([tf.keras.layers.InputLayer(input_shape=(2*(number_of_pairs+1), 28*28)),
+                                        tfa.layers.ESN(units=500,spectral_radius=0.8,input_shape=(2*(number_of_pairs+1), 28*28)),
+                                        tf.keras.layers.Dense(20, activation=tf.nn.relu),
+                                        tf.keras.layers.Dense(5, activation=tf.nn.softmax)])
 
-print()
 
-numHit = 0 
-for i in range(test_predictions1.shape[0]):
-    indexOfPair = 0
-    for j in range(number_of_pairs):
-        if testY[i,j] == 1:
-            indexOfPair = j
-    if (max(test_predictions1[i]) == test_predictions1[i,indexOfPair]):
-        numHit+=1
+    model2.compile(optimizer = tf.optimizers.Adam(),
+                loss = 'categorical_crossentropy',
+                metrics=['accuracy'])
 
-accuracy1 = numHit / test_predictions1.shape[0]
+    model2.summary()
 
-numHit = 0 
-for i in range(test_predictions2.shape[0]):
-    indexOfPair = 0
-    for j in range(number_of_pairs):
-        if testY[i,j] == 1:
-            indexOfPair = j
-    if (max(test_predictions2[i]) == test_predictions2[i,indexOfPair]):
-        numHit+=1
+    model2.fit(trainX, trainY, epochs=10)
 
-accuracy2 = numHit / test_predictions2.shape[0]
+    losses_df1 = pd.DataFrame(model2.history.history)
 
-print("accuracy of ANN:")
-print(accuracy1)
+    losses_df1.plot(figsize = (10,6))
 
-print()
+    test_predictions2 = model2.predict(testX)
 
-print("accuracy of RC:")
-print(accuracy2)
+    save_model(model1, "ESN_Models/MSlinear.h5")
+
+    save_model(model2, "ESN_Models/MSRC.h5")
+
+    print("Test RC Model:")
+    print(testY[0])
+
+    print("Prediction RC Model")
+    print(test_predictions2[0])
+
+    print("Test RC Model:")
+    print(testY[1])
+
+    print("Prediction RC Model:")
+    print(test_predictions2[1])
+
+    print()
+
+    numHit = 0 
+    for i in range(test_predictions1.shape[0]):
+        indexOfPair = 0
+        for j in range(number_of_pairs):
+            if testY[i,j] == 1:
+                indexOfPair = j
+        if (max(test_predictions1[i]) == test_predictions1[i,indexOfPair]):
+            numHit+=1
+
+    accuracy1 = numHit / test_predictions1.shape[0]
+
+    numHit = 0 
+    for i in range(test_predictions2.shape[0]):
+        indexOfPair = 0
+        for j in range(number_of_pairs):
+            if testY[i,j] == 1:
+                indexOfPair = j
+        if (max(test_predictions2[i]) == test_predictions2[i,indexOfPair]):
+            numHit+=1
+
+    accuracy2 = numHit / test_predictions2.shape[0]
+
+    print("accuracy of ANN:")
+    print(accuracy1)
+
+    print()
+
+    print("accuracy of RC:")
+    print(accuracy2)
 
