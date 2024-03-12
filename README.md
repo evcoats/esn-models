@@ -10,6 +10,6 @@ mixedSelectivityComparison is an analysis of the hyperparameters optimal for thi
 | -------- | ------- | ------- |------- |------- |------- |------- |
 | 10  |     |
 | 20 |      |
-| 30   | $420    |
-| 40   | $420    |
-| 50   | $420    |
+| 30   |     |
+| 40   |   |
+| 50   |    |
