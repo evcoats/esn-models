@@ -7,7 +7,9 @@ This project is for exploring the Echo State Network architecture of Reservoir C
 mixedSelectivityComparison is an analysis of the hyperparameters optimal for this task and a look into the effectiveness of reservoir computing for tasks in which trainable layer sizes are limited. It uses the same models as mixedSelectivityTask but performs the test on 5 different L2 sizes, ranging from 10-50, and 5 different reservoir layer sizes, ranging from 100-500. In each case, the classic model has over 5x the number of trainable parameters of the RC, but the classic model lacks the high dimensional function availability of the reservoir layer. Here are the results:
 
 | L2 Size    | Classic Model | Reservoir size 100 | Reservoir size 200 | Reservoir size 300 | Reservoir size 400 | Reservoir size 500 |
-| -------- | ------- | 
-| January  | $250    |
-| February | $80     |
-| March    | $420    |
+| -------- | ------- | ------- |------- |------- |------- |------- |
+| 10  |     |
+| 20 |      |
+| 30   | $420    |
+| 40   | $420    |
+| 50   | $420    |
