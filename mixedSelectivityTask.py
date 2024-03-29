@@ -66,18 +66,17 @@ def Sequential_Input(df_np, number_of_pairs):
     return np.array(X), np.array(y)
 
 
-number_of_pairs = 5
-
-trainX, trainY = Sequential_Input(training_images, number_of_pairs)
-
-testX, testY = Sequential_Input(test_images, number_of_pairs)
-
-
-
-print(trainX[0].shape)
-print(trainY[0].shape)
-
 def trainModels():
+    
+    number_of_pairs = 5
+
+    trainX, trainY = Sequential_Input(training_images, number_of_pairs)
+
+    testX, testY = Sequential_Input(test_images, number_of_pairs)
+
+    print(trainX[0].shape)
+    print(trainY[0].shape)
+
 
     model1 = tf.keras.models.Sequential([tf.keras.layers.InputLayer((2*(number_of_pairs+1), 28, 28)),
                                         tf.keras.layers.Flatten(),
@@ -181,4 +180,7 @@ def trainModels():
 
     print("accuracy of RC:")
     print(accuracy2)
+
+
+# trainModels()
 
