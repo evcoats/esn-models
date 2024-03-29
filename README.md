@@ -14,4 +14,4 @@ This project is for exploring the Echo State Network architecture of Reservoir C
 | 40   | 0.4754 | 0.4831 |  0.6177 | 0.6733 | 0.7402 | 0.8041 |
 | 50   |0.3382 | 0.5781 | 0.6145 | 0.6900 | 0.7410 | 0.8053 |
 
-[mixedSelectivityFewShot.py](mixedSelectivityFewShot.py) is an example of an RC outperforming a standard model in conditions of low amounts of training data (3000 examples), limited trainable parameters, and extra layers, with Layer 2 sizes being 50. In these cases with limited trainable parameters, the RC architecture shows its strength. The RC had an accuracy of 0.7672 while the ANN had an accuracy of  0.5800 in conditions of low training data. 
+[mixedSelectivityFewShot.py](mixedSelectivityFewShot.py) is an example of an RC outperforming a standard model in conditions of low amounts of training data (3000 examples) and limited trainable parameters, with Layer 2 sizes being 50. In these cases with limited trainable parameters, the RC architecture shows its strength. The RC had an accuracy of 0.7672 while the ANN had an accuracy of  0.5800 in conditions of low training data. 
